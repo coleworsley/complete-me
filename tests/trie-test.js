@@ -13,51 +13,83 @@ describe('Trie Test', () => {
     expect(mapleTrie).to.be.instanceof(Trie);
   });
 
-  it('should insert a letter into the trie', () => {
-    mapleTrie.insert('h');
+  describe('Insert Function', () => {
+    it('should insert a letter into the trie', () => {
+      mapleTrie.insert('h');
 
-    expect(mapleTrie.root.children.h.letter).to.equal('h');
+      expect(mapleTrie.root.children.h.letter).to.equal('h');
 
-    mapleTrie.insert('i');
+      mapleTrie.insert('i');
 
-    expect(mapleTrie.root.children.i.letter).to.equal('i');
+      expect(mapleTrie.root.children.i.letter).to.equal('i');
+    });
+
+    it('should insert a word into the trie', () => {
+      mapleTrie.insert('Hi');
+
+      expect(mapleTrie.root.children.h.letter).to.equal('h');
+      expect(mapleTrie.root.children.h.children.i.letter).to.equal('i');
+
+      mapleTrie.insert('Hippie');
+
+      expect(mapleTrie.root.children.
+        h.children.
+        i.children.
+        p.children.
+        p.children.
+        i.children.
+        e.isWord).to.equal(true);
+
+      expect(mapleTrie.root.children.
+        h.children.
+        i.isWord).to.equal(true);
+      });
   });
 
-  it('should insert a word into the trie', () => {
-    mapleTrie.insert('Hi');
+  describe('Count Function', () => {
+    it('should return 0 if there is nothing to count', () => {
+      expect(mapleTrie.count()).to.equal(0);
+    });
 
-    expect(mapleTrie.root.children.h.letter).to.equal('h');
-    expect(mapleTrie.root.children.h.children.i.letter).to.equal('i');
+    it('should count the number of complete words in the trie', () => {
+      expect(mapleTrie.count()).to.equal(0);
 
-    mapleTrie.insert('Hippie');
+      mapleTrie.insert('Hi');
+      mapleTrie.insert('Hill');
 
-    expect(mapleTrie.root.children.
-                   h.children.
-                   i.children.
-                   p.children.
-                   p.children.
-                   i.children.
-                   e.isWord).to.equal(true);
+      expect(mapleTrie.count()).to.equal(2);
 
-    expect(mapleTrie.root.children.
-                   h.children.
-                   i.isWord).to.equal(true);
+      mapleTrie.insert('Something');
+      mapleTrie.insert('Person');
+      mapleTrie.insert('someone');
+
+      expect(mapleTrie.count()).to.equal(5);
+    });
   });
 
-  it('should count the number of complete words in the trie', () => {
-    expect(mapleTrie.count()).to.equal(0);
+  describe('Suggest Function', () => {
+    it('should return itself if there is nothing to suggest', () => {
+      const newTrie = new Trie()
+      
+      expect(newTrie.suggest('hi')).to.deep.equal(['hi']);
+    });
 
-    mapleTrie.insert('Hi');
-    // mapleTrie.insert('Hill');
+    beforeEach(() => {
+      mapleTrie.insert('Hi');
+      mapleTrie.insert('Hill');
+      mapleTrie.insert('Hippie');
+      mapleTrie.insert('Hike');
+      mapleTrie.insert('Apple');
+      mapleTrie.insert('App');
+      mapleTrie.insert('Apply');
+      mapleTrie.insert('Apollo');
+    });
 
-    expect(mapleTrie.count()).to.equal(1);
-
-    // mapleTrie.insert('Something');
-    // mapleTrie.insert('Person');
-    // mapleTrie.insert('someone');
-
-    // expect(mapleTrie.count()).to.equal(4);
+    it.skip('should return a suggestion based on the input', () => {
+      expect(mapleTrie.suggest('hi')).to.deep.equal(['hi', 'hill', 'hippie', 'hike']);
+    });
   });
+
 });
 
 

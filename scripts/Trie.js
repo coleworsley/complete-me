@@ -18,16 +18,34 @@ export default class Trie {
     currentNode.isWord = true;
   }
 
-  count(currentNode = this.root, counter = 0) {
-    let keys = Object.keys(currentNode.children);
+  count(currentNode = this.root.children, counter = 0) {
+    if (!currentNode) return 0;
 
-    console.log(currentNode)
-    console.log(currentNode.children)
+    let keys = Object.keys(currentNode);
+
     keys.forEach((key) => {
-      if (currentNode.isWord) counter++;
-      this.count(currentNode.children[key], counter);
-    })
-    if (currentNode.children <= 0) return counter;
+      if (currentNode[key].isWord) {
+        counter++;
+      }
+      counter = this.count(currentNode[key].children, counter);
+    });
     return counter;
+  }
+
+  suggest(str) {
+    let currentNode = this.root;
+    let arr = [str];
+
+    [...str.toLowerCase()].forEach(letter => {
+      if(!currentNode.children[letter]) {
+        return;
+      }
+      currentNode = currentNode.children[letter];
+    });
+
+    // current node is now starting point
+    
+
+    return arr;
   }
 }
