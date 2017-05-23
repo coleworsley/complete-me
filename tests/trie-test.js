@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Node from '../scripts/node'
+// import Node from '../scripts/node'
 import Trie from '../scripts/trie'
 
 describe('Trie Test', () => {
@@ -43,7 +43,7 @@ describe('Trie Test', () => {
       expect(mapleTrie.root.children.
         h.children.
         i.isWord).to.equal(true);
-      });
+    });
   });
 
   describe('Count Function', () => {
@@ -68,7 +68,7 @@ describe('Trie Test', () => {
   });
 
   describe('Suggest Function', () => {
-    it('should return itself if there is nothing to suggest', () => {
+    it.skip('should return itself if there is nothing to suggest', () => {
       const newTrie = new Trie()
 
       expect(newTrie.suggest('hi')).to.deep.equal(['hi']);
@@ -79,16 +79,12 @@ describe('Trie Test', () => {
       mapleTrie.insert('Hill');
       mapleTrie.insert('Hike');
       mapleTrie.insert('Hiker');
+      mapleTrie.insert('Hippie');
     });
 
     it('should return a suggestion based on the input', () => {
-      expect(mapleTrie.suggest('hi')).to.deep.equal(['hi', 'hill', 'hike', 'hiker']);
+      expect(mapleTrie.suggest('hi')).to.deep.equal(['hi', 'hill', 'hike', 'hiker', 'hippie']);
     });
   });
 
 });
-
-
-const loopThroughNodes = (str) => {
-
-}
