@@ -70,23 +70,19 @@ describe('Trie Test', () => {
   describe('Suggest Function', () => {
     it('should return itself if there is nothing to suggest', () => {
       const newTrie = new Trie()
-      
+
       expect(newTrie.suggest('hi')).to.deep.equal(['hi']);
     });
 
     beforeEach(() => {
       mapleTrie.insert('Hi');
       mapleTrie.insert('Hill');
-      mapleTrie.insert('Hippie');
       mapleTrie.insert('Hike');
-      mapleTrie.insert('Apple');
-      mapleTrie.insert('App');
-      mapleTrie.insert('Apply');
-      mapleTrie.insert('Apollo');
+      mapleTrie.insert('Hiker');
     });
 
-    it.skip('should return a suggestion based on the input', () => {
-      expect(mapleTrie.suggest('hi')).to.deep.equal(['hi', 'hill', 'hippie', 'hike']);
+    it('should return a suggestion based on the input', () => {
+      expect(mapleTrie.suggest('hi')).to.deep.equal(['hi', 'hill', 'hike', 'hiker']);
     });
   });
 

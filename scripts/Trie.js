@@ -23,7 +23,7 @@ export default class Trie {
 
     let keys = Object.keys(currentNode);
 
-    keys.forEach((key) => {
+    keys.forEach(key => {
       if (currentNode[key].isWord) {
         counter++;
       }
@@ -32,19 +32,32 @@ export default class Trie {
     return counter;
   }
 
-  suggest(str) {
-    let currentNode = this.root;
-    let arr = [str];
-
+  suggest(str, currentNode = this.root.children) {
     [...str.toLowerCase()].forEach(letter => {
-      if(!currentNode.children[letter]) {
-        return;
-      }
-      currentNode = currentNode.children[letter];
+      if(!currentNode[letter]) return;
+      currentNode = currentNode[letter].children;
     });
 
     // current node is now starting point
-    
+    return this.suggestHelper(currentNode, str);
+  }
+
+  suggestHelper(currentNode, builtStr, arr = []) {
+    if (!currentNode) return arr;
+
+    let keys = Object.keys(currentNode);
+
+    keys.forEach(key => {
+      builtStr += key;
+      console.log('currentNode = ',currentNode);
+      console.log('---------');
+      console.log('builtStr = ',builtStr);
+      console.log('=========');
+      if (currentNode[key].isWord) {
+        arr.push(builtStr);
+      }
+      arr = this.suggestHelper(currentNode[key].children, builtStr, arr);
+    })
 
     return arr;
   }
