@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Trie from '../scripts/trie';
+import Trie from '../scripts/Trie';
 import fs from 'fs';
 const text = '/usr/share/dict/words';
 const dictionary = fs.readFileSync(text).toString().trim().split('\n');

@@ -1,7 +1,7 @@
 {
-  "name": "TDD",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@coleworsley/complete-me",
+  "version": "0.0.1",
+  "description": "Prefix Trie implementation",
   "main": "index.js",
   "directories": {
     "test": "tests"
