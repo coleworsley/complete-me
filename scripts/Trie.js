@@ -47,7 +47,7 @@ export default class Trie {
     });
 
     if (startingNode.isWord) {
-      array.unshift(str);
+      array.unshift({ word: str, frequency: startingNode.frequency });
     }
 
     const suggestHelper = (str, node, arr = []) => {
@@ -61,19 +61,34 @@ export default class Trie {
         let newStr = str + childNode.letter;
 
         if (childNode.isWord) {
-          arr.push(newStr);
+          arr.push({ word: newStr, frequency: childNode.frequency });
         }
         arr = suggestHelper(newStr, childNode, arr);
       });
       return arr;
     }
 
-    array = [...array, ...suggestHelper(str, startingNode)];
+    array = this.sortSuggestions([...array, ...suggestHelper(str, startingNode)]);
     return array;
   }
 
-  sortSuggestions(array) {
-    
+  sortSuggestions(objArray) {
+    return objArray.sort((a, b) => {
+      return  b.frequency - a.frequency;
+    }).reduce((acc, wordObj) => {
+      acc.push(wordObj.word);
+      return acc;
+    }, []);
+
+      // return objArray.reduce((acc, wordObj) => {
+      //   acc.push(wordObj.word);
+      //   return acc;
+      // }, []);
+
+    // objArray.reduce((acc, word) => {
+    //   acc.push(word);
+    //   return acc;
+    // }, []);
   }
 
 

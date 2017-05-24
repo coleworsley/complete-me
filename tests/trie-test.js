@@ -98,11 +98,11 @@ describe('Trie Test', function() {
       mapleTrie.insert('might');
       mapleTrie.insert('blight');
 
-      expect(mapleTrie.suggest('HI')).to.deep.equal(['hi', 'him', 'hill', 'hike']);
+      expect(mapleTrie.suggest('hi')).to.deep.equal(['hi', 'hill', 'hike', 'hiker', 'him', 'hitter']);
 
+      mapleTrie.select('hiker');
 
-
-      expect(mapleTrie.suggest('HI')).to.deep.equal(['hi', 'hill', 'hike']);
+      expect(mapleTrie.suggest('hi')).to.deep.equal(['hiker', 'hi', 'hill', 'hike', 'him', 'hitter']);
     });
   });
 
