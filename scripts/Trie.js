@@ -16,6 +16,7 @@ export default class Trie {
     });
 
     currentNode.isWord = true;
+    this.counter++
   }
 
   count(currentNode = this.root.children, counter = 0) {
@@ -42,7 +43,6 @@ export default class Trie {
       if (!startingNode.children[letter]) {
         return;
       }
-
       startingNode = startingNode.children[letter];
     });
 
@@ -54,7 +54,6 @@ export default class Trie {
       if (!node.children) {
         return arr;
       }
-
       let letters = Object.keys(node.children)
 
       letters.forEach(letter => {
@@ -64,16 +63,19 @@ export default class Trie {
         if (childNode.isWord) {
           arr.push(newStr);
         }
-
         arr = suggestHelper(newStr, childNode, arr);
       });
-
       return arr;
     }
 
     array = [...array, ...suggestHelper(str, startingNode)];
     return array;
   }
+
+  sortSuggestions(array) {
+    
+  }
+
 
   populate(arr) {
     if (!(arr instanceof Array)) {
@@ -83,5 +85,17 @@ export default class Trie {
     arr.forEach(word => {
       this.insert(word);
     })
+  }
+
+  select(word) {
+    let currentNode = this.root;
+
+    [...word.toLowerCase()].forEach(letter => {
+      currentNode = currentNode.children[letter];
+    });
+
+    if (currentNode.isWord) {
+      currentNode.frequency++;
+    }
   }
 }

@@ -1,10 +1,12 @@
 import { expect } from 'chai';
-// import Node from '../scripts/node'
 import Trie from '../scripts/trie';
 import fs from 'fs';
+const text = '/usr/share/dict/words';
+const dictionary = fs.readFileSync(text).toString().trim().split('\n');
 
 describe('Trie Test', function() {
-  this.timeout(15000);
+  // console.log(dictionary.length);
+  // this.timeout(15000);
   let mapleTrie;
 
   beforeEach(() => {
@@ -27,12 +29,12 @@ describe('Trie Test', function() {
     });
 
     it('should insert a word into the trie', () => {
-      mapleTrie.insert('Hi');
+      mapleTrie.insert('Hippie');
 
       expect(mapleTrie.root.children.h.letter).to.equal('h');
       expect(mapleTrie.root.children.h.children.i.letter).to.equal('i');
 
-      mapleTrie.insert('Hippie');
+      mapleTrie.insert('Hi');
 
       expect(mapleTrie.root.children.
         h.children.
@@ -70,10 +72,6 @@ describe('Trie Test', function() {
   });
 
   describe('Suggest Function', () => {
-    beforeEach(function() {
-      this.timeout(5000);
-    });
-
     it('should return an empty array if there is nothing to suggest', () => {
       const newTrie = new Trie();
 
@@ -90,14 +88,57 @@ describe('Trie Test', function() {
       expect(mapleTrie.suggest('hi')).to.deep.equal(['hi', 'hill', 'hike', 'hiker', 'hippie']);
     });
 
-    it('should return suggestions from a large dictionary', (done) => {
-      const text = '/usr/share/dict/words';
-      const dictionary = fs.readFileSync(text).toString().trim().split('\n');
+    it('should order suggestions based on the frequency of the node', () => {
+      mapleTrie.insert('Hi');
+      mapleTrie.insert('Hill');
+      mapleTrie.insert('Hike');
+      mapleTrie.insert('hiker');
+      mapleTrie.insert('him');
+      mapleTrie.insert('hitter');
+      mapleTrie.insert('might');
+      mapleTrie.insert('blight');
 
-      mapleTrie.populate(dictionary);
-      setTimeout(done, 5000);
+      expect(mapleTrie.suggest('HI')).to.deep.equal(['hi', 'him', 'hill', 'hike']);
 
-      expect(mapleTrie.suggest('piz')).to.deep.equal([
+
+
+      expect(mapleTrie.suggest('HI')).to.deep.equal(['hi', 'hill', 'hike']);
+    });
+  });
+
+  describe('Selection Function', () => {
+    it('should have a function for selecting which choice was picked', () => {
+      expect(mapleTrie.select).to.be.instanceof(Function);
+    });
+
+    it('should be able to increase the frequency of a Node', () => {
+      mapleTrie.insert('Hi');
+      mapleTrie.select('Hi')
+
+      expect(mapleTrie.root.children.h.children.i.frequency).to.equal(1);
+    });
+  });
+
+  describe('Work with large Dictionaries', () => {
+    const bigTrie = new Trie()
+
+    bigTrie.populate(dictionary);
+
+    it('should populate from an array of words', () => {
+      const trie = new Trie();
+      const wordArray = ['Hi', 'hello', 'person'];
+
+      expect(trie.count()).to.equal(0);
+      trie.populate(wordArray);
+      expect(trie.count()).to.equal(3);
+    });
+
+    it('should populate a large dictionary', () => {
+      expect(bigTrie.count()).to.equal(235886 - 1515);
+    });
+
+    it('should return suggestions from a large dictionary', () => {
+      expect(bigTrie.suggest('piz')).to.deep.equal([
         "pize",
         "pizza",
         "pizzeria",
@@ -107,24 +148,27 @@ describe('Trie Test', function() {
     });
   });
 
-  describe('Populate Function', function() {
 
-    it('should populate from an array of words', () => {
-      const wordArray = ['Hi', 'hello', 'person'];
 
-      expect(mapleTrie.count()).to.equal(0);
-      mapleTrie.populate(wordArray);
-      expect(mapleTrie.count()).to.equal(3);
+  it.skip('delete me', () => {
+    const dictionaryObj = dictionary.reduce((acc, word) => {
+      word = word.toLowerCase();
+      if (!acc[word]) {
+        acc[word] = 0;
+      }
+      acc[word]++;
+
+      return acc;
+    }, {});
+
+    const duplicates = Object.keys(dictionaryObj).filter(word => {
+      if (dictionaryObj[word] > 1) {
+        return word;
+      }
     });
 
+    console.log(duplicates.length);
 
-    it('should populate a large dictionary', function() {
-      const text = '/usr/share/dict/words';
-      const dictionary = fs.readFileSync(text).toString().trim().split('\n');
-
-      mapleTrie.populate(dictionary);
-
-      expect(mapleTrie.count()).to.equal(234371);
-    });
   });
+
 });
