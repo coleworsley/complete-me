@@ -79,18 +79,7 @@ export default class Trie {
       acc.push(wordObj.word);
       return acc;
     }, []);
-
-      // return objArray.reduce((acc, wordObj) => {
-      //   acc.push(wordObj.word);
-      //   return acc;
-      // }, []);
-
-    // objArray.reduce((acc, word) => {
-    //   acc.push(word);
-    //   return acc;
-    // }, []);
   }
-
 
   populate(arr) {
     if (!(arr instanceof Array)) {

@@ -4,9 +4,7 @@ import fs from 'fs';
 const text = '/usr/share/dict/words';
 const dictionary = fs.readFileSync(text).toString().trim().split('\n');
 
-describe('Trie Test', function() {
-  // console.log(dictionary.length);
-  // this.timeout(15000);
+describe('Trie Test', () => {
   let mapleTrie;
 
   beforeEach(() => {
@@ -88,7 +86,7 @@ describe('Trie Test', function() {
       expect(mapleTrie.suggest('hi')).to.deep.equal(['hi', 'hill', 'hike', 'hiker', 'hippie']);
     });
 
-    it('should order suggestions based on the frequency of the node', () => {
+    it('should order suggestions when you select one', () => {
       mapleTrie.insert('Hi');
       mapleTrie.insert('Hill');
       mapleTrie.insert('Hike');
@@ -104,6 +102,24 @@ describe('Trie Test', function() {
 
       expect(mapleTrie.suggest('hi')).to.deep.equal(['hiker', 'hi', 'hill', 'hike', 'him', 'hitter']);
     });
+
+    it('should order suggestions based on the frequency of the node', () => {
+      mapleTrie.insert('Hi');
+      mapleTrie.insert('Hill');
+      mapleTrie.insert('Hike');
+      mapleTrie.insert('hiker');
+      mapleTrie.insert('him');
+      mapleTrie.insert('hitter');
+
+      expect(mapleTrie.suggest('hi')).to.deep.equal(['hi', 'hill', 'hike', 'hiker', 'him', 'hitter']);
+
+      mapleTrie.select('hike');
+      mapleTrie.select('hitter');
+      mapleTrie.select('hike');
+
+      expect(mapleTrie.suggest('hi')).to.deep.equal(['hike', 'hitter', 'hi', 'hill', 'hiker', 'him']);
+    });
+
   });
 
   describe('Selection Function', () => {
@@ -113,7 +129,7 @@ describe('Trie Test', function() {
 
     it('should be able to increase the frequency of a Node', () => {
       mapleTrie.insert('Hi');
-      mapleTrie.select('Hi')
+      mapleTrie.select('Hi');
 
       expect(mapleTrie.root.children.h.children.i.frequency).to.equal(1);
     });
@@ -146,11 +162,33 @@ describe('Trie Test', function() {
         "pizzle"
       ]);
     });
+
+    it('should select words', () => {
+      bigTrie.select('apply');
+
+      expect(bigTrie.root.children.a.children.p.children.p.children.l.children.y.frequency).to.equal(1);
+    });
+
+    it('should order words by the frequency selected', () => {
+      const keyword = 'zebu';
+
+      expect(bigTrie.suggest(keyword)).to.deep.equal([ 'zebu', 'zebub', 'zebulunite', 'zeburro' ]);
+
+      bigTrie.select('zeburro');
+
+      expect(bigTrie.suggest(keyword)).to.deep.equal([ 'zeburro', 'zebu', 'zebub', 'zebulunite']);
+
+      bigTrie.select('zebulunite');
+      bigTrie.select('zeburro');
+      bigTrie.select('zeburro');
+      bigTrie.select('zebulunite');
+
+      expect(bigTrie.suggest(keyword)).to.deep.equal([ 'zeburro', 'zebulunite', 'zebu', 'zebub']);
+
+    });
   });
 
-
-
-  it.skip('delete me', () => {
+  it('check the dictionary for duplicates', () => {
     const dictionaryObj = dictionary.reduce((acc, word) => {
       word = word.toLowerCase();
       if (!acc[word]) {
@@ -167,8 +205,6 @@ describe('Trie Test', function() {
       }
     });
 
-    console.log(duplicates.length);
-
+    expect(duplicates.length).to.equal(1515);
   });
-
 });
