@@ -1,7 +1,7 @@
 {
   "name": "@coleworsley/complete-me",
-  "version": "0.0.2",
-  "description": "Prefix Trie implementation",
+  "version": "0.0.4",
+  "description": "Prefix Trie Implementation",
   "main": "index.js",
   "directories": {
     "test": "tests"

@@ -36,20 +36,26 @@ export default class Trie {
   }
 
   suggest(str) {
+    const strArray = str ? [...str.toLowerCase()] : [];
     let array = [];
     let startingNode = this.root;
 
-    [...str.toLowerCase()].forEach(letter => {
-      if (!startingNode.children[letter]) {
-        return;
-      }
-      startingNode = startingNode.children[letter];
-    });
-
-    if (startingNode.isWord) {
-      array.unshift({ word: str, frequency: startingNode.frequency });
+    if (!str) {
+      return [];
     }
 
+    for (let i = 0; i < strArray.length; i++) {
+      const letter = strArray[i];
+
+      if (!startingNode.children[letter]) {
+        return [];
+      }
+      startingNode = startingNode.children[letter]
+    }
+
+    if (startingNode.isWord && startingNode.letter === str.slice(-1)) {
+      array.unshift({ word: str, frequency: startingNode.frequency });
+    }
     const suggestHelper = (str, node, arr = []) => {
       if (!node.children) {
         return arr;

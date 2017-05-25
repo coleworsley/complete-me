@@ -76,6 +76,19 @@ describe('Trie Test', () => {
       expect(newTrie.suggest('hi')).to.deep.equal([]);
     });
 
+    it('should return an empty array if nothing is suggested', () => {
+      const newTrie = new Trie();
+
+      expect(newTrie.suggest()).to.deep.equal([]);
+    });
+
+    it('should return an empty array if the input does not exist', () => {
+      expect(mapleTrie.suggest()).to.deep.equal([]);
+      mapleTrie.insert('test');
+
+      expect(mapleTrie.suggest('tester')).to.deep.equal([]);
+    });
+
     it('should return a suggestion based on the input', () => {
       mapleTrie.insert('Hi');
       mapleTrie.insert('Hill');
@@ -167,6 +180,10 @@ describe('Trie Test', () => {
       bigTrie.select('apply');
 
       expect(bigTrie.root.children.a.children.p.children.p.children.l.children.y.frequency).to.equal(1);
+    });
+
+    it('should return an empty array with an invalid input', () => {
+      expect(bigTrie.suggest('afewofijawefn')).to.deep.equal([]);
     });
 
     it('should order words by the frequency selected', () => {
